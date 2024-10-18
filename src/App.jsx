@@ -4,8 +4,8 @@ function App() {
 
   return (
     <>
-      <div className='bg-black flex-col'>
-        <div className="relative">
+      <div className='relative flex-col'>
+        <div className="">
           <Header />
         </div>
         <Outlet />
