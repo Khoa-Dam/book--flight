@@ -14,6 +14,7 @@ export default {
       },
       width: {
         '960': '960px', // Chiều rộng cố định 960px
+        '600': '600px',
       },
       colors: {
         'my-blue': '#159bee', // Màu xanh tùy chỉnh

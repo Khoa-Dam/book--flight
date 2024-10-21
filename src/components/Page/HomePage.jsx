@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from 'react-router-dom';
 import videoHomepage from "../../assets/video.mp4"
 import { GrLocation } from "react-icons/gr";
 import Icon from '../icon';
-import { GiAirplaneDeparture, GiAirplaneArrival } from "react-icons/gi";
+import { FaPlaneDeparture, FaPlaneArrival } from "react-icons/fa";
 import AirportDropdown from "../DropDown";
 const links = [
     { name: 'Đặt vé', href: '/' },
@@ -12,27 +12,56 @@ const links = [
 ]
 
 export default function HomePage() {
-    const [value, setValue] = React.useState("");
-    const [show, setShow] = React.useState(false);
+    const [departure, setDeparture] = React.useState("");
+    const [showdeparture, setShowdeparture] = React.useState(false);
+    const [destination, setDestination] = React.useState("");
+    const [showdestination, setShowDestination] = React.useState(false);
 
-    const handleAirportSelect = (selectedAirport) => {
-        setValue(selectedAirport); // Cập nhật giá trị khi người dùng chọn từ dropdown
-        setShow(false); // Ẩn dropdown khi đã chọn
+    const handleAirportSelect = (selectedAirport, type) => {
+        if (type === "departure") {
+            setDeparture(selectedAirport);
+            setShowdeparture(false);
+        } else if (type === "destination") {
+            setDestination(selectedAirport);
+            setShowDestination(false);
+        }
     };
+    const check = () => {
+        if (departure !== "" && destination !== "") {
+            if (departure === destination) {
+                // Hành động khi departure và destination giống nhau
+                alert("Departure và Destination không thể giống nhau!");
+                // Reset một trong các giá trị nếu cần
+                setDestination(""); // Hoặc setDeparture("") tùy thuộc vào yêu cầu
+            }
+            if (departure === "") {
+                alert("Vui lòng chọn điểm cất cánh");
+            }
+            if (destination === "") {
+                alert("Vui lòng chọn điểm hạ cánh");
+            }
+        }
 
-    const onInputChange = (event) => {
+    }
+
+    const onInputChange = (event, type) => {
         const value = event.currentTarget.value;
-        setValue(value);
-        setShow(true); // Hiển thị dropdown khi người dùng nhập
-    };
 
+        if (type === "departure") {
+            setDeparture(value);
+            setShowdeparture(true); // Hiển thị dropdown cho departure
+        } else if (type === "destination") {
+            setDestination(value);
+            setShowDestination(true); // Hiển thị dropdown cho destination
+        }
+    };
     return (
         <div className="relative isolate overflow-hidden py-24 sm:py-20 w-full min-h-screen flex flex-col md:flex-row ">
             <video autoPlay muted loop className='absolute w-screen h-4/5 object-cover opacity-3 top-0 left-0 bottom-0 right-0 '>
                 <source src={videoHomepage}
                     type="video/mp4" />
             </video>
-            <div className="absolute ml-44 mt-14 max-w-7xl px-6 lg:px-8 flex-col items-center justify-center">
+            <div className="absolute ml-44 mt-12 max-w-full px-6 lg:px-8 flex-col items-center justify-center">
                 <div className='relative'>
                     <div className="max-w-2xl lg:mx-0  ">
                         <h2 className="text-base font-bold tracking-tight text-white sm:text-3xl ">BOOK YOUR FLIGHT</h2>
@@ -55,19 +84,19 @@ export default function HomePage() {
                                 <div className='grid grid-row-2 gap-1'>
                                     <label htmlFor='city' className='block text-text-color '>Từ:</label>
                                     <div className='relative'>
-                                        <GiAirplaneDeparture className='absolute top-1 -left-2' />
+                                        <FaPlaneDeparture className='absolute top-1 -left-2' />
                                         <input className="border-b-2 border-gray-500 pl-4 focus:outline-none" type='text' placeholder='Enter here...'
-                                            onFocus={() => setShow(true)}
+                                            onFocus={() => setShowdeparture(true)}
                                             onBlur={() =>
                                                 setTimeout(() => {
-                                                    setShow(false);
+                                                    setShowdeparture(false);
                                                 }, 150)
                                             }
-                                            value={value}
-                                            onChange={onInputChange}>
+                                            value={departure}
+                                            onChange={(event) => onInputChange(event, "departure")}>
 
                                         </input>
-                                        {show && <AirportDropdown value={value} onSelect={handleAirportSelect} />}
+                                        {showdeparture && <AirportDropdown value={departure} onSelect={handleAirportSelect} className='absolute' />}
                                     </div>
                                 </div>
                                 <div className='flex items-center w-6 h-6 relative top-1/2 mx-4 '>
@@ -76,8 +105,19 @@ export default function HomePage() {
                                 <div className='grid grid-row-2 gap-1'>
                                     <label htmlFor='city' className='block text-text-color '>Đến:</label>
                                     <div className='relative'>
-                                        <GiAirplaneArrival className='absolute top-1 -left-2' />
-                                        <input className="border-b-2 border-gray-500 pl-4 focus:outline-none" type='text' placeholder='Enter here...' />
+                                        <FaPlaneArrival className='absolute top-1 -left-2' />
+                                        <input className="border-b-2 border-gray-500 pl-4 focus:outline-none" type='text' placeholder='Enter here...
+                                        '
+                                            onFocus={() => setShowDestination(true)}
+                                            onBlur={() =>
+                                                setTimeout(() => {
+                                                    setShowDestination(false);
+                                                },)
+                                            }
+                                            value={destination}
+                                            onChange={(event) => onInputChange(event, "destination")}>
+                                        </input>
+                                        {showdestination && <AirportDropdown value={destination} onSelect={handleAirportSelect} className='absolute' />}
                                     </div>
                                 </div>
                                 <div className='flex items-center w-6 h-6 relative top-1/2 mx-4 '>
@@ -109,9 +149,9 @@ export default function HomePage() {
 
                 </div>
 
-            </div>
+            </div >
 
 
-        </div>
+        </div >
     )
 }

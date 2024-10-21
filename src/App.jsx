@@ -4,7 +4,7 @@ function App() {
 
   return (
     <>
-      <div className='relative flex-col'>
+      <div className='relative flex-col h-max'>
         <div className="">
           <Header />
         </div>
